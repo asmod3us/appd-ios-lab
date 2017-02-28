@@ -1,0 +1,9 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+project 'sample-ios-objc'
+
+target 'sample-ios-objc'
+
+
+
+platform :ios, '6.0'
