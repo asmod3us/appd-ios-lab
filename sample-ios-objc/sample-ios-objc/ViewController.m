@@ -76,7 +76,27 @@ int noOfItems = 0;
                     NSLog(@"HTTP Status Code: %ld", [(NSHTTPURLResponse*)response statusCode]);
                     NSLog(@"%@",strData);
                     [self getHttpResponseHeaders:response];
+                    [self getWeatherData:response fromData:data];
                 }] resume];
+}
+
+
+- (void)getWeatherData:(NSURLResponse*)response
+              fromData:(NSData*) data {
+    NSDictionary *dict=[[NSDictionary alloc]init];
+    dict=[NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    
+    NSArray *weather = [dict objectForKey:@"weather"];
+    NSDictionary *loc = [weather objectAtIndex:0];
+    NSString *main = [loc objectForKey:@"main"];
+    NSLog(@"current weather in london: %@", main);
+    
+    if ([@"rain" isEqualToString:[main lowercaseString] ]) {
+        [_doesItRain setText:@"YES :("];
+    } else {
+        [_doesItRain setText:@"NO :)"];
+    }
+
 }
 
 - (void)doHttpPost:(NSURL*)url {
@@ -110,7 +130,11 @@ int noOfItems = 0;
 
 
 - (IBAction)getItemsClicked:(id)sender {
-    NSURL *url = [NSURL URLWithString:@"http://localhost:8080/output.json"];
+    NSString *httpEndpoint = @"http://api.openweathermap.org/data/2.5/weather?q=";
+    NSString *location = @"London";
+    NSString *apiKey =@"&appid=716f8bdc119843c7e88b7ada22d5d7c3";
+
+    NSURL *url = [NSURL URLWithString: [ @[httpEndpoint, location, apiKey] componentsJoinedByString:@""] ];
     [self doHttpGet:url];
 }
 
