@@ -92,9 +92,15 @@ int noOfItems = 0;
     NSLog(@"current weather in london: %@", main);
     
     if ([@"rain" isEqualToString:[main lowercaseString] ]) {
-        [_doesItRain setText:@"YES :("];
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            [_doesItRain setText:@"YES :("];
+        }];
+        
     } else {
-        [_doesItRain setText:@"NO :)"];
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            [_doesItRain setText:@"NO :)"];
+        }];
+
     }
 
 }
